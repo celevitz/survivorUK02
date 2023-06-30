@@ -52,52 +52,43 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
   sitouts <- challenges %>%
     group_by(castaway,castaway_id) %>%
     filter(sit_out == TRUE) %>%
-    summarise(sitoutcount = n()) %>%
-    # for those who haven't yet sat out
-    full_join(confessionals %>% 
-                select(castaway,castaway_id) %>% 
-                distinct() ) %>%
-    mutate(sitoutcount = ifelse(is.na(sitoutcount),0,sitoutcount))
+    summarise(sitoutcount = n()) 
   
 ## tribal council records through this episode
   attendance <- votehx %>%
     filter(!(is.na(version))) %>%
     group_by(castaway,castaway_id) %>%
-    mutate(TCattended = n()) %>%
-    select(castaway,castaway_id,TCattended) %>%
-    # for those who haven't yet attended TC, add them on as 0s
-    full_join(confessionals %>% 
-                select(castaway,castaway_id) %>% 
-                distinct() ) %>%
-    mutate(TCattended = ifelse(is.na(TCattended),0,TCattended))
+    summarise(TCattended = n()) %>%
+    select(castaway,castaway_id,TCattended) 
   
-  numbertimesreceivedvotes <- votehx %>%
+  numbervotesreceived <- votehx %>%
     filter(!(is.na(version))) %>%
     group_by(vote,vote_id) %>%
-    mutate(timesreceivedvotes = n()) %>%
-    select(vote,vote_id,timesreceivedvotes) %>%
+    mutate(votesreceived = n()) %>%
+    select(vote,vote_id,votesreceived) %>%
     rename(castaway = vote,castaway_id = vote_id) %>%
-    distinct() %>%
-    # for those who haven't yet attended TC, add them on as 0s
-    full_join(confessionals %>% 
-                select(castaway,castaway_id) %>% 
-                distinct() ) %>%
-    mutate(timesreceivedvotes = ifelse(is.na(timesreceivedvotes),0
-                                       ,timesreceivedvotes))
+    distinct() 
   
   
   successfulboots <- votehx %>%
+    select(version,castaway,castaway_id,episode,order,vote_order
+           ,vote_id,voted_out_id,tie) %>%
     # exclude ties
     filter(!(is.na(version)) & tie == "FALSE") %>%
     # how many times have people voted?
     group_by(castaway,castaway_id,episode,order,vote_order) %>%
-    mutate(totalvotes = n()) %>%
+    mutate(eachtimevotedis1 = n()) %>%
     ungroup() %>%
+    group_by(castaway,castaway_id) %>%
+    mutate(totalvotes = sum(eachtimevotedis1)) %>%
     # get the successes
     mutate(successful = ifelse(vote_id == voted_out_id,1,0)
+           # aggregate successes
+           ,successful = sum(successful)
+           #get percent success rate
            ,successfulpercent = paste0(round(successful/totalvotes*100,0)
                                        ,"%")) %>%
-    select(castaway,castaway_id,successful,successfulpercent) %>%
+    select(castaway,castaway_id,successfulpercent) %>%
     distinct()
 
 ## Confessionals
@@ -112,9 +103,15 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
     full_join(winloss) %>%
     full_join(sitouts) %>%
     full_join(attendance) %>%
-    full_join(numbertimesreceivedvotes) %>%
+    full_join(numbervotesreceived) %>%
     full_join(successfulboots) %>%
-    full_join(conf) 
+    full_join(conf)  %>%
+    mutate(sitoutcount = ifelse(is.na(sitoutcount),0,sitoutcount)
+           ,TCattended = ifelse(is.na(TCattended),0,TCattended)
+           ,votesreceived = ifelse(is.na(votesreceived),0
+                                        ,votesreceived)
+           ,successfulpercent = ifelse(is.na(successfulpercent)
+                                       ,"NA",successfulpercent)) 
   
   combined$castaway <- factor(combined$castaway,
                 levels = combined$castaway[order(is.na(combined$result_number)
