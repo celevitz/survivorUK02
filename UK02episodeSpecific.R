@@ -4,7 +4,7 @@
 
 rm(list=ls())
 
-episodeofchoice <- 1
+episodeofchoice <- 2
 
 library(ggplot2)
 library(dplyr)
@@ -48,6 +48,16 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
            ,Win_Loss = paste0(as.character(Won),"-",as.character(Lost) )
            ,WinPercent = paste0(round(sum(Won)/sum(Won+Lost)*100,0),"%") ) %>%
     select(castaway,castaway_id,Win_Loss,WinPercent)
+  
+  sitouts <- challenges %>%
+    group_by(castaway,castaway_id) %>%
+    filter(sit_out == TRUE) %>%
+    summarise(sitoutcount = n()) %>%
+    # for those who haven't yet sat out
+    full_join(confessionals %>% 
+                select(castaway,castaway_id) %>% 
+                distinct() ) %>%
+    mutate(sitoutcount = ifelse(is.na(sitoutcount),0,sitoutcount))
   
 ## tribal council records through this episode
   attendance <- votehx %>%
@@ -100,6 +110,7 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
   combined <- tribes %>%
     full_join(bootorder) %>%
     full_join(winloss) %>%
+    full_join(sitouts) %>%
     full_join(attendance) %>%
     full_join(numbertimesreceivedvotes) %>%
     full_join(successfulboots) %>%
