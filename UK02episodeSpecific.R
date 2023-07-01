@@ -4,7 +4,7 @@
 
 rm(list=ls())
 
-episodeofchoice <- 4
+episodeofchoice <- 7
 
 library(ggplot2)
 library(dplyr)
@@ -35,8 +35,9 @@ confessionals <- read.xlsx("UK02data.xlsx",sheet="Confessionals") %>%
 tribes <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
   select(castaway,castaway_id,original_tribe)
 bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
-  filter(episode <= episodeofchoice) %>%
-  select(castaway,castaway_id,result_number)
+  mutate(stillin = case_when(episode <= episodeofchoice ~ "OUT"
+                             ,TRUE ~ "IN")) %>%
+  select(castaway,castaway_id,result_number,stillin)
 
 ## win-loss record through this episode
   winloss <- challenges %>%
@@ -64,7 +65,7 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
     select(castaway,castaway_id,TCattended) 
   
   numbervotesreceived <- votehx %>%
-    filter(!(is.na(version))) %>%
+    filter(!(is.na(version)) & !(is.na(vote))) %>%
     group_by(vote,vote_id) %>%
     mutate(votesreceived = n()) %>%
     select(vote,vote_id,votesreceived) %>%
@@ -116,9 +117,10 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
                                        ,"NA",successfulpercent)) 
   
   combined$castaway <- factor(combined$castaway,
-                levels = combined$castaway[order(is.na(combined$result_number)
+                levels = combined$castaway[order(combined$stillin
+                                          ,combined$result_number
                                           ,combined$confessional_time
-                                          ,decreasing = FALSE)])
+                                          ,decreasing = TRUE)])
   
   
   
@@ -154,6 +156,7 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
     theme(axis.ticks.x=element_blank()
           ,axis.line.x = element_blank() 
           ,axis.text.x = element_text(family = ft,size=18)
+          ,axis.text.y = element_text(family = ft,size=18)
           ,axis.title = element_blank()
           ,panel.grid = element_blank()
           ,plot.title = element_text(family=ft)
