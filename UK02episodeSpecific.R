@@ -4,7 +4,7 @@
 
 rm(list=ls())
 
-episodeofchoice <- 2
+episodeofchoice <- 4
 
 library(ggplot2)
 library(dplyr)
@@ -15,6 +15,8 @@ library(showtext)
 font_add_google("Barlow", "bar")
 showtext_auto()
 ft <- "bar"
+
+textsize <- 8
 
 directory <- "/Users/carlylevitz/Documents/Data/survivor/"
 setwd(directory)
@@ -124,17 +126,26 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
   
   combined %>%
     ggplot(aes(x=0,y=0)) +
-    geom_text(aes(x=rep(10,12),y=castaway,label=Win_Loss,family=ft)) +
-    geom_text(aes(x=rep(20,12),y=castaway,label=WinPercent,family=ft)) +
-    geom_text(aes(x=rep(30,12),y=castaway,label=sitoutcount,family=ft)) +
-    geom_text(aes(x=rep(40,12),y=castaway,label=TCattended,family=ft)) +
-    geom_text(aes(x=rep(50,12),y=castaway,label=votesreceived,family=ft)) +
-    geom_text(aes(x=rep(60,12),y=castaway,label=successfulpercent,family=ft)) +
-    geom_text(aes(x=rep(70,12),y=castaway,label=confessional_count,family=ft)) +
-    geom_text(aes(x=rep(80,12),y=castaway,label=confessional_time,family=ft)) +
+    geom_text(aes(x=rep(0,12),y=castaway,label=original_tribe,family=ft)) +
+    geom_text(aes(x=rep(10,12),y=castaway,label=Win_Loss,family=ft)
+              ,size=textsize) +
+    geom_text(aes(x=rep(20,12),y=castaway,label=WinPercent,family=ft)
+              ,size=textsize) +
+    geom_text(aes(x=rep(30,12),y=castaway,label=sitoutcount,family=ft)
+              ,size=textsize) +
+    geom_text(aes(x=rep(40,12),y=castaway,label=TCattended,family=ft)
+              ,size=textsize) +
+    geom_text(aes(x=rep(50,12),y=castaway,label=votesreceived,family=ft)
+              ,size=textsize) +
+    geom_text(aes(x=rep(60,12),y=castaway,label=successfulpercent,family=ft)
+              ,size=textsize) +
+    geom_text(aes(x=rep(70,12),y=castaway,label=confessional_count,family=ft)
+              ,size=textsize) +
+    geom_text(aes(x=rep(80,12),y=castaway,label=confessional_time,family=ft)
+              ,size=textsize) +
     scale_x_continuous(lim=c(0,90),name="",position="top"
-                       ,breaks=seq(10,80,10)
-                       ,labels=c("Win-Loss","Win %","Sit-outs"
+                       ,breaks=seq(0,80,10)
+                       ,labels=c("Starting tribe","Win-Loss","Win %","Sit-outs"
                                  ,"Tribal Councils\nattended","Votes received"
                                  ,"Successful\nboots (%)","Confessional\ncounts"
                                  ,"Confession time\n(seconds)")) +
@@ -142,7 +153,7 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
     theme_minimal() +
     theme(axis.ticks.x=element_blank()
           ,axis.line.x = element_blank() 
-          ,axis.text.x = element_text(family = ft)
+          ,axis.text.x = element_text(family = ft,size=18)
           ,axis.title = element_blank()
           ,panel.grid = element_blank()
           ,plot.title = element_text(family=ft)
@@ -150,5 +161,6 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
           ,plot.caption = element_text(family = ft))
   
   
-  
+  dev.print(png, file = "SurvivorUK02_Stats.png", width = 1200, height = 900)
+  dev.off()
   
