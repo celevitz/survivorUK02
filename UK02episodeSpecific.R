@@ -123,7 +123,32 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
 ## Graph it!
   
   combined %>%
-    ggplot(aes(x=confessional_time,y=castaway,label=castaway)) +
-    geom_text() 
+    ggplot(aes(x=0,y=0)) +
+    geom_text(aes(x=rep(10,12),y=castaway,label=Win_Loss,family=ft)) +
+    geom_text(aes(x=rep(20,12),y=castaway,label=WinPercent,family=ft)) +
+    geom_text(aes(x=rep(30,12),y=castaway,label=sitoutcount,family=ft)) +
+    geom_text(aes(x=rep(40,12),y=castaway,label=TCattended,family=ft)) +
+    geom_text(aes(x=rep(50,12),y=castaway,label=votesreceived,family=ft)) +
+    geom_text(aes(x=rep(60,12),y=castaway,label=successfulpercent,family=ft)) +
+    geom_text(aes(x=rep(70,12),y=castaway,label=confessional_count,family=ft)) +
+    geom_text(aes(x=rep(80,12),y=castaway,label=confessional_time,family=ft)) +
+    scale_x_continuous(lim=c(0,90),name="",position="top"
+                       ,breaks=seq(10,80,10)
+                       ,labels=c("Win-Loss","Win %","Sit-outs"
+                                 ,"Tribal Councils\nattended","Votes received"
+                                 ,"Successful\nboots (%)","Confessional\ncounts"
+                                 ,"Confession time\n(seconds)")) +
+    labs(title = paste0("Survivor UK: Panama, Episode ",episodeofchoice)) +
+    theme_minimal() +
+    theme(axis.ticks.x=element_blank()
+          ,axis.line.x = element_blank() 
+          ,axis.text.x = element_text(family = ft)
+          ,axis.title = element_blank()
+          ,panel.grid = element_blank()
+          ,plot.title = element_text(family=ft)
+          ,plot.subtitle = element_text(family = ft)
+          ,plot.caption = element_text(family = ft))
+  
+  
   
   
