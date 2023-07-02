@@ -4,7 +4,7 @@
 
 rm(list=ls())
 
-episodeofchoice <- 7
+episodeofchoice <- 12
 
 library(ggplot2)
 library(dplyr)
@@ -76,8 +76,8 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
   successfulboots <- votehx %>%
     select(version,castaway,castaway_id,episode,order,vote_order
            ,vote_id,voted_out_id,tie) %>%
-    # exclude ties
-    filter(!(is.na(version)) & tie == "FALSE") %>%
+    # exclude ties and non-votes
+    filter(!(is.na(version)) & tie == "FALSE" & !(is.na(vote_id))) %>%
     # how many times have people voted?
     group_by(castaway,castaway_id,episode,order,vote_order) %>%
     mutate(eachtimevotedis1 = n()) %>%
@@ -117,9 +117,7 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
                                        ,"NA",successfulpercent)) 
   
   combined$castaway <- factor(combined$castaway,
-                levels = combined$castaway[order(combined$stillin
-                                          ,combined$result_number
-                                          ,combined$confessional_time
+                levels = combined$castaway[order(combined$result_number
                                           ,decreasing = TRUE)])
   
   
@@ -143,15 +141,18 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
               ,size=textsize) +
     geom_text(aes(x=rep(70,12),y=castaway,label=confessional_count,family=ft)
               ,size=textsize) +
-    geom_text(aes(x=rep(80,12),y=castaway,label=confessional_time,family=ft)
+    geom_text(aes(x=rep(85,12),y=castaway,label=confessional_time,family=ft)
               ,size=textsize) +
+    geom_vline(xintercept=5)+
+    geom_vline(xintercept=35)+
+    geom_vline(xintercept=65)+
     scale_x_continuous(lim=c(0,90),name="",position="top"
-                       ,breaks=seq(0,80,10)
+                       ,breaks=c(seq(0,70,10),85)
                        ,labels=c("Starting tribe","Win-Loss","Win %","Sit-outs"
                                  ,"Tribal Councils\nattended","Votes received"
                                  ,"Successful\nboots (%)","Confessional\ncounts"
-                                 ,"Confession time\n(seconds)")) +
-    labs(title = paste0("Survivor UK: Panama, Episode ",episodeofchoice)) +
+                                 ,"Confessional time\n(seconds)")) +
+    labs(title = "Survivor UK: Panama") +
     theme_minimal() +
     theme(axis.ticks.x=element_blank()
           ,axis.line.x = element_blank() 
@@ -159,7 +160,7 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
           ,axis.text.y = element_text(family = ft,size=18)
           ,axis.title = element_blank()
           ,panel.grid = element_blank()
-          ,plot.title = element_text(family=ft)
+          ,plot.title = element_text(family=ft,size=30,face="bold")
           ,plot.subtitle = element_text(family = ft)
           ,plot.caption = element_text(family = ft))
   
