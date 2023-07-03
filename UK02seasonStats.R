@@ -1,6 +1,6 @@
 ## Carly Levitz
 ## 2023-06-30
-## Purpose: analyze episode 1 data
+## Purpose: analyze season 2's data
 
 rm(list=ls())
 
