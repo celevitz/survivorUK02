@@ -168,12 +168,14 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
   geom_text(data = alldata %>% filter(!c(castaway %in% c("mean","sd","total")) &
                                       !c(episode %in% c(13,14)))
             ,color="gray10",size=6) +
+  geom_text(data = alldata %>% filter(episode ==27)
+            ,color="gray10",size=6) +
   scale_x_continuous(lim=c(0,27),breaks=c(seq(1,14,1),seq(16,27,1))
                    ,labels=c(paste0("Ep",seq(1,12,1)),"mean","total"
                              ,paste0("Ep",seq(1,12,1)))
                    ,position="top") +
   scale_fill_manual(values=c(brewer.pal(n = 7, name = "PuRd"),"snow"
-                             ,brewer.pal(n = 6, name = "PuRd"),"snow")) +
+                             ,brewer.pal(n = 6, name = "PuRd"))) +
   xlab("") +
   labs(title=titletext
      ,subtitle=subtitletext
