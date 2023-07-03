@@ -7,8 +7,7 @@ rm(list=ls())
 episodeofchoice <- 12
 
 library(ggplot2)
-library(dplyr)
-library(tidyr)
+library(tidyverse)
 library(openxlsx)
 library(showtext)
 
@@ -162,10 +161,12 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
   
   
 ## Graph it!
+
   
   combined %>%
     ggplot(aes(x=0,y=0)) +
-    geom_text(aes(x=rep(0,12),y=castaway,label=original_tribe,family=ft)) +
+    geom_text(aes(x=rep(0,12),y=castaway,label=original_tribe,family=ft)
+              ,size=6) +
     geom_text(aes(x=rep(10,12),y=castaway,label=Win_LossT,family=ft)
               ,size=textsize) +
     geom_text(aes(x=rep(20,12),y=castaway,label=WinPercentT,family=ft)
@@ -188,7 +189,8 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
               ,size=textsize) +
     geom_text(aes(x=rep(110,12),y=castaway,label=confessional_count,family=ft)
               ,size=textsize) +
-    geom_text(aes(x=rep(125,12),y=castaway,label=confessional_time,family=ft)
+    geom_text(aes(x=rep(125,12),y=castaway
+                  ,label=as.duration(confessional_time),family=ft)
               ,size=textsize) +
     geom_vline(xintercept=5)+
     geom_vline(xintercept=55)+
@@ -202,9 +204,9 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
                                  ,"TCs at which\nreceived votes"
                                  ,"Votes\nreceived","Votes that\nsent them home"
                                  ,"Successful\nboots (%)","Confessional\ncounts"
-                                 ,"Confessional time\n(seconds)")) +
+                                 ,"Confessional time")) +
     labs(title = "Survivor UK: Panama"
-         ,subtitle = "Graphic by @carlylevitz"
+         ,subtitle = "Source: manual data entry and @danoehm's survivoR R package's confessional counter /// Visualization: Twitter @carlylevitz \ncode: github.com/celevitz/survivorUK02 /// Tools: rstats, ggplot2, tidyverse, ggtext, survivoR"
          ,caption = "Helen was eliminated based on a sudden-death trivia contest; Jonny and Susanna were never voted out") +
     theme_minimal() +
     theme(axis.ticks.x=element_blank()
@@ -214,10 +216,10 @@ bootorder <- read.xlsx("UK02data.xlsx",sheet="Castaways") %>%
           ,axis.title = element_blank()
           ,panel.grid = element_blank()
           ,plot.title = element_text(family=ft,size=30,face="bold")
-          ,plot.subtitle = element_text(family = ft)
+          ,plot.subtitle = element_text(family = ft,size=18)
           ,plot.caption = element_text(family = ft,size = 18))
   
   
-  dev.print(png, file = "SurvivorUK02_Stats.png", width = 1600, height = 900)
+  dev.print(png, file = "SurvivorUK02_Stats.png", width = 1800, height = 900)
   dev.off()
   
