@@ -5,8 +5,6 @@
 
 rm(list=ls())
 
-
-
 library(ggplot2)
 library(tidyverse)
 library(openxlsx)
@@ -14,9 +12,21 @@ library(showtext)
 library(RColorBrewer)
 library(ggtext)
 
+font_add("fa-brands", "/Users/carlylevitz/downloads/fontawesome-free-6.4.0-desktop/otfs/Font Awesome 6 Brands-Regular-400.otf")
+font_add("fa-solid", "/Users/carlylevitz/downloads/fontawesome-free-6.4.0-desktop/otfs/Font Awesome 6 Free-Solid-900.otf")
+
 font_add_google("Barlow", "bar")
 showtext_auto()
 ft <- "bar"
+
+accent <- brewer.pal(n = 9, name = "PuRd")[9]
+bg <- "snow"
+
+twitter <- str_glue("<span style='font-family:fa-brands; color:{accent}'>&#xf099;</span>")
+github <- str_glue("<span style='font-family:fa-brands; color:{accent}'>&#xf09b;</span>")
+reddit <- str_glue("<span style='font-family:fa-brands; color:{accent}'>&#xf1a1;</span>")
+floppy <- str_glue("<span style='font-family:fa-solid; color:{accent}'>&#xf0c7;</span>")
+space <- str_glue("<span style='color:{bg};font-size:1px'>'</span>")
 
 textsize <- 8
 
@@ -140,10 +150,14 @@ confessionals <- confessionals %>%
     
     
 ## Graph it    
-titletext <- str_glue("Confessional screentime (minutes and % of total) in Survivor UK Panama (Season 2)")
-subtitletext <- str_glue("Data gathered using the Confessional Timing app from github.com/doehm/survivoR (Twitter @danoehm)")
-captiontext <- str_glue("Visualization and data capture by Twitter @carlylevitz /// Tools: rstats, survivoR, ggplot, tidyverse, rcolorbrewer /// code github.com/celevitz/survivorUK02")
-
+titletext <- str_wrap("Confessional screentime (minutes and % of total) in Survivor UK Panama (Season 2)"
+                      ,90)
+subtitletext <- str_wrap("John and Susannah had the most confessional screentime. Episode six was unique in that the vast majority of the episode was focused on the individual immunity challenge and there were few confessionals shown.\n\nData gathered using the Confessional Timing app from the survivoR R package (Twitter @danoehm)."
+                         ,160)
+captiontext <- str_glue("{twitter}{space}@carlylevitz{github}{space}
+                      github.com/celevitz/survivorUK02{reddit}{space}
+                        u/Consistent-Lion-2125{floppy}{space}
+                        CRAN.R-project.org/package=survivoR")
     
 alldata %>%
 ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
@@ -168,15 +182,17 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
   theme(legend.position = "none"
       ,panel.grid = element_blank()
       ,axis.ticks = element_blank()
-      ,axis.text = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
+      ,axis.text.y = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
                                 ,size = 20)
+      ,axis.text.x = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
+                                  ,size = 16)
       ,axis.title = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
                                  ,size = 20,face="bold")
       ,plot.title = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
                                  ,size = 30,face="bold")
       ,plot.subtitle = element_text(color=brewer.pal(n = 9,name = "PuRd")[9]
                                     ,size=20)
-      ,plot.caption = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
+      ,plot.caption = element_markdown(color=brewer.pal(n = 9, name = "PuRd")[9]
                                    ,size=20,hjust=.5)
       ,panel.background = element_rect(color="snow", fill="snow")
       ,plot.background  = element_rect(color="snow", fill="snow")
