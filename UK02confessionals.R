@@ -37,7 +37,7 @@ setwd(directory)
 ## Thanks to Dan Oehm's code!
   to_minSec <- function(seconds) {
     mins <- floor(seconds/60)
-    secs <- str_pad(seconds - mins*60, width = 2, pad = 0)
+    secs <- str_pad(round(seconds - mins*60,0), width = 2, pad = 0)
     paste0(mins, ":", secs)
   }
   
