@@ -77,7 +77,7 @@ confessionals <- confessionals %>%
 ## heat map of confessional duration by person & episode
 titletext <- str_glue("Screentime (minutes) in Survivor UK Panama (Season 2)")
 subtitletext <- str_glue("Data gathered using the Confessional Timing app from github.com/doehm/survivoR (Twitter @danoehm)")
-captiontext <- str_glue("Visualization and data capture by Twitter @carlylevitz /// Tools: rstats, ggplot, tidyverse, rcolorbrewer, survivoR /// code github.com/celevitz/survivorUK02")
+captiontext <- str_glue("Visualization and data capture by Twitter @carlylevitz <br> Tools: rstats, ggplot, tidyverse, rcolorbrewer, survivoR /// code github.com/celevitz/survivorUK02")
 
 confessionals %>%
   ggplot(aes(x=episode,y=castaway,fill=category
