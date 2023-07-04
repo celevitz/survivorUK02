@@ -19,8 +19,10 @@ font_add_google("Raleway", "rale")
 showtext_auto()
 ft <- "rale"
 
-accent <- brewer.pal(n = 9, name = "PuRd")[9]
+accent <- brewer.pal(n = 9, name = "PuBuGn")[9]
 bg <- "snow"
+timecolors <- brewer.pal(n = 7, name = "PuBuGn")
+percentcolors <- brewer.pal(n = 6, name = "PuBuGn")
 
 twitter <- str_glue("<span style='font-family:fa-brands; color:{accent}'>&#xf099;</span>")
 github <- str_glue("<span style='font-family:fa-brands; color:{accent}'>&#xf09b;</span>")
@@ -161,7 +163,7 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
   geom_tile(aes(fill=category)) +
   geom_text(data = alldata %>% filter(castaway %in% c("mean","total") |
                                       episode %in% c(13,14))
-            ,color=brewer.pal(n = 9, name = "PuRd")[9],size=6,family=ft) +
+            ,color=accent,size=6,family=ft) +
   geom_text(data = alldata %>% filter(!c(castaway %in% c("mean","total")) &
                                       !c(episode %in% c(13,14)) &
                                       !c(category %in% c("2:00 to 2:59"
@@ -173,13 +175,12 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
                                                      ,"3:00 or more"
                                                      ,"20% to 29.9%"
                                                      ,"30% or greater"))
-            ,color="snow",size=6,family=ft) +
+            ,color=bg,size=6,family=ft) +
   scale_x_continuous(lim=c(0,28),breaks=c(seq(1,14,1),seq(16,27,1))
                    ,labels=c(paste0("Ep",seq(1,12,1)),"mean","total"
                              ,paste0("Ep",seq(1,12,1)))
                    ,position="top") +
-  scale_fill_manual(values=c(brewer.pal(n = 7, name = "PuRd"),"snow"
-                             ,brewer.pal(n = 6, name = "PuRd"))) +
+  scale_fill_manual(values=c(timecolors,bg,percentcolors)) +
   xlab("") +
   labs(title=titletext
      ,subtitle=subtitletext
@@ -188,24 +189,15 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
   theme(legend.position = "none"
       ,panel.grid = element_blank()
       ,axis.ticks = element_blank()
-      ,axis.text.y = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                ,size = 20,family=ft)
-      ,axis.text.x = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                  ,size = 16,family=ft)
-      ,axis.title = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                 ,size = 20,face="bold",family=ft)
-      ,plot.title = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                 ,size = 30,face="bold",family=ft)
-      ,plot.subtitle = element_text(color=brewer.pal(n = 9,name = "PuRd")[9]
-                                    ,size=20,family=ft)
-      ,plot.caption = element_markdown(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                   ,size=20,hjust=.5,family=ft)
-      ,panel.background = element_rect(color="snow", fill="snow")
-      ,plot.background  = element_rect(color="snow", fill="snow")
+      ,axis.text.y = element_text(color=accent,size = 20,family=ft)
+      ,axis.text.x = element_text(color=accent,size = 16,family=ft)
+      ,axis.title = element_text(color=accent,size = 20,face="bold",family=ft)
+      ,plot.title = element_text(color=accent,size = 30,face="bold",family=ft)
+      ,plot.subtitle = element_text(color=accent,size=20,family=ft)
+      ,plot.caption = element_markdown(color=accent,size=20,hjust=.5,family=ft)
+      ,panel.background = element_rect(color=bg, fill=bg)
+      ,plot.background  = element_rect(color=bg, fill=bg)
       ,plot.margin = margin(t=25,r=10,l=10,b=10))
-
-
-
 
 dev.print(png, file = "UK02_ConfessionalData_Duration.png"
           , width = 1600, height = 900)
