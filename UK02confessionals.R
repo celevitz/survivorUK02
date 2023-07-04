@@ -15,9 +15,9 @@ library(ggtext)
 font_add("fa-brands", "/Users/carlylevitz/downloads/fontawesome-free-6.4.0-desktop/otfs/Font Awesome 6 Brands-Regular-400.otf")
 font_add("fa-solid", "/Users/carlylevitz/downloads/fontawesome-free-6.4.0-desktop/otfs/Font Awesome 6 Free-Solid-900.otf")
 
-font_add_google("Barlow", "bar")
+font_add_google("Raleway", "rale")
 showtext_auto()
-ft <- "bar"
+ft <- "rale"
 
 accent <- brewer.pal(n = 9, name = "PuRd")[9]
 bg <- "snow"
@@ -27,8 +27,6 @@ github <- str_glue("<span style='font-family:fa-brands; color:{accent}'>&#xf09b;
 reddit <- str_glue("<span style='font-family:fa-brands; color:{accent}'>&#xf1a1;</span>")
 floppy <- str_glue("<span style='font-family:fa-solid; color:{accent}'>&#xf0c7;</span>")
 space <- str_glue("<span style='color:{bg};font-size:1px'>'</span>")
-
-textsize <- 8
 
 directory <- "/Users/carlylevitz/Documents/Data/survivor/"
 setwd(directory)
@@ -152,7 +150,7 @@ confessionals <- confessionals %>%
 titletext <- str_wrap("Confessional screentime (minutes and % of total) in Survivor UK Panama (Season 2)"
                       ,90)
 subtitletext <- str_wrap("John and Susannah had the most confessional screentime. Episode six was unique in that the vast majority of the episode was focused on the individual immunity challenge and there were few confessionals shown.\n\nData gathered using the Confessional Timing app from the survivoR R package (Twitter @danoehm)."
-                         ,160)
+                         ,150)
 captiontext <- str_glue("{twitter}{space}@carlylevitz{github}{space}
                       github.com/celevitz/survivorUK02{reddit}{space}
                         u/Consistent-Lion-2125{floppy}{space}
@@ -163,19 +161,19 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
   geom_tile(aes(fill=category)) +
   geom_text(data = alldata %>% filter(castaway %in% c("mean","total") |
                                       episode %in% c(13,14))
-            ,color=brewer.pal(n = 9, name = "PuRd")[9],size=5) +
+            ,color=brewer.pal(n = 9, name = "PuRd")[9],size=6,family=ft) +
   geom_text(data = alldata %>% filter(!c(castaway %in% c("mean","total")) &
                                       !c(episode %in% c(13,14)) &
                                       !c(category %in% c("2:00 to 2:59"
                                                          ,"3:00 or more"
                                                          ,"20% to 29.9%"
                                                          ,"30% or greater")))
-            ,color="gray10",size=5) +
+            ,color="gray10",size=6,family=ft) +
   geom_text(data = alldata %>% filter(category %in% c("2:00 to 2:59"
                                                      ,"3:00 or more"
                                                      ,"20% to 29.9%"
                                                      ,"30% or greater"))
-            ,color="snow",size=5) +
+            ,color="snow",size=6,family=ft) +
   scale_x_continuous(lim=c(0,28),breaks=c(seq(1,14,1),seq(16,27,1))
                    ,labels=c(paste0("Ep",seq(1,12,1)),"mean","total"
                              ,paste0("Ep",seq(1,12,1)))
@@ -191,17 +189,17 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
       ,panel.grid = element_blank()
       ,axis.ticks = element_blank()
       ,axis.text.y = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                ,size = 20)
+                                ,size = 20,family=ft)
       ,axis.text.x = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                  ,size = 16)
+                                  ,size = 16,family=ft)
       ,axis.title = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                 ,size = 20,face="bold")
+                                 ,size = 20,face="bold",family=ft)
       ,plot.title = element_text(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                 ,size = 30,face="bold")
+                                 ,size = 30,face="bold",family=ft)
       ,plot.subtitle = element_text(color=brewer.pal(n = 9,name = "PuRd")[9]
-                                    ,size=20)
+                                    ,size=20,family=ft)
       ,plot.caption = element_markdown(color=brewer.pal(n = 9, name = "PuRd")[9]
-                                   ,size=20,hjust=.5)
+                                   ,size=20,hjust=.5,family=ft)
       ,panel.background = element_rect(color="snow", fill="snow")
       ,plot.background  = element_rect(color="snow", fill="snow")
       ,plot.margin = margin(t=25,r=10,l=10,b=10))
