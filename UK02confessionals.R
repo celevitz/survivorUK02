@@ -108,17 +108,16 @@ confessionals <- confessionals %>%
       bind_rows(
         share %>%
           ungroup() %>% group_by(episode) %>%
-          summarise(sd = round(sd(percent),3)
-                    ,mean = round(mean(percent),3)) %>%
+          summarise(mean = round(mean(percent),3)) %>%
           pivot_longer(!episode,names_to = "castaway"
                        ,values_to = "percent")
       ) %>%
-      mutate(castaway = factor(castaway,levels=c("sd","mean"
+      mutate(castaway = factor(castaway,levels=c("mean"
                                                ,"Sarah","Lee","Tayfun","Meeta"
                                                ,"Helen","Alastair","Drew","Dave"
                                                ,"Bridget","John","Susannah"
                                                ,"Jonny"))
-             ,category = factor(case_when(castaway %in% c("sd","mean") ~ "NA"
+             ,category = factor(case_when(castaway %in% c("mean") ~ "NA"
                                   ,percent == 0 ~ "0%"
                                   ,0 < percent & percent < .05 ~ "0.1% to 4.9%"
                                   ,.05 <= percent & percent < .1 ~ "5% to 9.9%"
@@ -142,7 +141,7 @@ confessionals <- confessionals %>%
                   select(!c(confessional_time,episodedurationtotal)) %>%
                   rename(confessional_time = percent) %>%
                   mutate(type = "percent")) %>%
-      mutate(castaway = factor(castaway,levels=c("sd","mean","total"
+      mutate(castaway = factor(castaway,levels=c("mean","total"
                                                ,"Sarah","Lee","Tayfun","Meeta"
                                                ,"Helen","Alastair","Drew","Dave"
                                                ,"Bridget","John","Susannah"
@@ -162,10 +161,10 @@ captiontext <- str_glue("{twitter}{space}@carlylevitz{github}{space}
 alldata %>%
 ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
   geom_tile() +
-  geom_text(data = alldata %>% filter(castaway %in% c("mean","sd","total") |
+  geom_text(data = alldata %>% filter(castaway %in% c("mean","total") |
                                       episode %in% c(13,14))
             ,color=brewer.pal(n = 9, name = "PuRd")[9],size=6) +
-  geom_text(data = alldata %>% filter(!c(castaway %in% c("mean","sd","total")) &
+  geom_text(data = alldata %>% filter(!c(castaway %in% c("mean","total")) &
                                       !c(episode %in% c(13,14)))
             ,color="gray10",size=6) +
   geom_text(data = alldata %>% filter(episode ==27)
