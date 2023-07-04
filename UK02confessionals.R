@@ -165,10 +165,17 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
                                       episode %in% c(13,14))
             ,color=brewer.pal(n = 9, name = "PuRd")[9],size=6) +
   geom_text(data = alldata %>% filter(!c(castaway %in% c("mean","total")) &
-                                      !c(episode %in% c(13,14)))
+                                      !c(episode %in% c(13,14)) &
+                                      !c(category %in% c("2:00 to 2:59"
+                                                         ,"3:00 or more"
+                                                         ,"20% to 29.9%"
+                                                         ,"30% or greater")))
             ,color="gray10",size=6) +
-  geom_text(data = alldata %>% filter(episode ==27)
-            ,color="gray10",size=6) +
+  geom_text(data = alldata %>% filter(category %in% c("2:00 to 2:59"
+                                                     ,"3:00 or more"
+                                                     ,"20% to 29.9%"
+                                                     ,"30% or greater"))
+            ,color="snow",size=6) +
   scale_x_continuous(lim=c(0,27),breaks=c(seq(1,14,1),seq(16,27,1))
                    ,labels=c(paste0("Ep",seq(1,12,1)),"mean","total"
                              ,paste0("Ep",seq(1,12,1)))
