@@ -160,23 +160,23 @@ captiontext <- str_glue("{twitter}{space}@carlylevitz{github}{space}
     
 alldata %>%
 ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
-  geom_tile() +
+  geom_tile(aes(fill=category)) +
   geom_text(data = alldata %>% filter(castaway %in% c("mean","total") |
                                       episode %in% c(13,14))
-            ,color=brewer.pal(n = 9, name = "PuRd")[9],size=6) +
+            ,color=brewer.pal(n = 9, name = "PuRd")[9],size=5) +
   geom_text(data = alldata %>% filter(!c(castaway %in% c("mean","total")) &
                                       !c(episode %in% c(13,14)) &
                                       !c(category %in% c("2:00 to 2:59"
                                                          ,"3:00 or more"
                                                          ,"20% to 29.9%"
                                                          ,"30% or greater")))
-            ,color="gray10",size=6) +
+            ,color="gray10",size=5) +
   geom_text(data = alldata %>% filter(category %in% c("2:00 to 2:59"
                                                      ,"3:00 or more"
                                                      ,"20% to 29.9%"
                                                      ,"30% or greater"))
-            ,color="snow",size=6) +
-  scale_x_continuous(lim=c(0,27),breaks=c(seq(1,14,1),seq(16,27,1))
+            ,color="snow",size=5) +
+  scale_x_continuous(lim=c(0,28),breaks=c(seq(1,14,1),seq(16,27,1))
                    ,labels=c(paste0("Ep",seq(1,12,1)),"mean","total"
                              ,paste0("Ep",seq(1,12,1)))
                    ,position="top") +
@@ -212,8 +212,5 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
 dev.print(png, file = "UK02_ConfessionalData_Duration.png"
           , width = 1600, height = 900)
 dev.off()
-
-
-
 
 
