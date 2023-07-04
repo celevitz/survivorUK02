@@ -168,12 +168,10 @@ ggplot(aes(x=episode,y=castaway,label=labelnames,fill=category)) +
                                       !c(episode %in% c(13,14)) &
                                       !c(category %in% c("2:00 to 2:59"
                                                          ,"3:00 or more"
-                                                         ,"20% to 29.9%"
                                                          ,"30% or greater")))
             ,color="gray10",size=6,family=ft) +
   geom_text(data = alldata %>% filter(category %in% c("2:00 to 2:59"
                                                      ,"3:00 or more"
-                                                     ,"20% to 29.9%"
                                                      ,"30% or greater"))
             ,color=bg,size=6,family=ft) +
   scale_x_continuous(lim=c(0,28),breaks=c(seq(1,14,1),seq(16,27,1))
